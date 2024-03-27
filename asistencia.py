@@ -1,5 +1,6 @@
 import requests
 import argparse
+import re
 
 def registrar_asistencia(codigo, rut, nota):
     url = f"https://losvilos.ucn.cl/hawaii/asist.php?c={codigo}&op=m"
@@ -20,7 +21,19 @@ def registrar_asistencia(codigo, rut, nota):
         print(f"Error al registrar la asistencia [{response.status_code}]")
         return False
 
+
+def validar_rut(rut):
+    rut_pattern = re.compile(r'^\d{7,8}-?[\dkK]$')
+    if not rut_pattern.match(rut):
+        print("Rut invalido.")
+        return False
+    else: 
+        return True
+
 def buscar_estudiante(codigo, rut):
+    if not validar_rut(rut):
+        return False
+
     url = f"https://losvilos.ucn.cl/hawaii/asist.php?c={codigo}&op=b"
     data = {'r': rut}
 
