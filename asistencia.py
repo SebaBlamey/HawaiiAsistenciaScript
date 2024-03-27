@@ -11,9 +11,14 @@ def registrar_asistencia(codigo, rut, nota):
     response = requests.post(url, data=data)
     
     if response.status_code == 200:
+        if "Too fast!" in response.text:
+            print("Too fast! Puede que el link sea invalido")
+            return False
         print("Asistencia registrada")
+        return True
     else:
         print(f"Error al registrar la asistencia [{response.status_code}]")
+        return False
 
 def buscar_estudiante(codigo, rut):
     url = f"https://losvilos.ucn.cl/hawaii/asist.php?c={codigo}&op=b"
@@ -24,7 +29,8 @@ def buscar_estudiante(codigo, rut):
     if response.status_code == 200:
         data = response.json()
         if data['nombre']:
-            print(f"Estudiante encontrado: {data['nombre']}")
+            print(f"Estudiante encontrado!")
+            print(f"Informacion del estudiante:\n {data}")
             return True
         else:
             print("Estudiante no encontrado.")
